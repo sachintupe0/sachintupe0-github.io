@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Groups</title>
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 20px;
+    }
+
+    .user-group {
+      margin-bottom: 20px;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .caption-group {
+      background-color: #d9e6f5;
+    }
+
+    .member-group {
+      background-color: #e6f5d9;
+    }
+
+    .user-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .user-item {
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+
+    .user-item:hover {
+      text-decoration: underline;
+    }
+
+    .user-name {
+      font-weight: bold;
+    }
+
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .popup-content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .puzzle-input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    .submit-btn {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .popup1-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .popup1-content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .contribute-input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    .submit-btn1 {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .submit-btn1:hover {
+      background-color: #0056b3;
+    }
+
+    #timer {
+      font-family: Arial, sans-serif;
+      font-size: 48px;
+      color: #333;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    #timer span {
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+      background-color: #f2f2f2;
+      border-radius: 50%;
+      line-height: 80px;
+      margin: 0 10px;
+    }
+
+    .warning {
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #ffc107;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+    
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .prompt-box {
+            width: 300px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .prompt-box label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .prompt-box input[type="password"] {
+            width: calc(100% - 40px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .prompt-box button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .prompt-box button:hover {
+            background-color: #45a049;
+        }
+/* Flash Screen Container */
+.flash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        /* Flash Screen Content */
+        .flash-screen p {
+            color: #fff;
+            font-size: 24px;
+            text-align: center;
+            max-width: 80%;
+        }
+
+        /* Popup Container */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 9998;
+            text-align: center;
+            max-width: 400px;
+            display: none; /* Hide initially */
+        }
+
+        /* Popup Title */
+        .popup h2 {
+            color: #FF007F;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        /* Popup Content */
+        .popup p {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        /* Popup Button */
+        .popup button {
+            background-color: #FF007F;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Close Button */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+            color: #333;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        /* Popup Container */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        /* Popup Title */
+        .popup h2 {
+            color: #FF007F;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        /* Popup Content */
+        .popup p {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        /* Popup Button */
+        .popup button {
+            background-color: #FF007F;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Close Button */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+            color: #333;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+
+        
+  </style>
+</head>
+
+<body>
+  <script src="question.js"></script>
+  <div id="timer">
+    <span id="minutes">6</span>:
+    <span id="seconds">00</span>
+  </div>
+  <div class="container" id="container">
+    <!-- Groups will be populated dynamically -->
+
+  </div>
+  <div id="popup" class="popup-overlay" style="display: none;">
+    <div class="popup-content" id="puzzleContent">
+      <h2>Puzzle</h2>
+      <div id="puzzleQuestions">
+        <p id="easyPuzzle"></p>
+        <p id="mediumPuzzle"></p>
+        <p id="hardPuzzle"></p>
+      </div>
+      <input type="text" id="answerInput" class="puzzle-input" style="display: none;">
+      <button onclick="submitAnswer()" id="submitButton" class="submit-btn" style="display: none;">Submit</button>
+    </div>
+  </div>
+  <div id="popup1" class="popup1-overlay" style="display: none;">
+    <div class="popup1-content" id="distributionContent">
+      <h2>Money Distribution</h2>
+      <p>Total amount to distribute: <span id="totalAmount"></span></p>
+      <!-- <p>Remaining amount: <span id="remainingAmount"></span></p> -->
+      <form id="distributionForm">
+        <div id="memberInputs">
+          <!-- Member inputs will be populated dynamically -->
+        </div>
+        <button type="submit" class="submit-btn">Submit</button>
+        <button type="button" onclick="closeDistributionPopup()" class="submit-btn1">Cancel</button>
+      </form>
+    </div>
+  </div>
+  <div class="overlay" id="overlay" style="display: none;">
+    <div class="prompt-box">
+        <label for="password">Enter your Password:</label>
+        <input type="password" id="password">
+        <button onclick="submitPassword()">Submit</button>
+    </div>
+</div>
+<div class="flash-screen" id="flashScreen" style="display: none;">
+  <p>"We rise by lifting others." - Robert Ingersoll</p>
+</div>
+
+<div class="popup" id="popup2" style="display: none;">
+  <button class="close-btn" onclick="closePopup()">X</button>
+  <h2>Happy International Women's Day!</h2>
+  <p>Celebrate the strength, resilience, and achievements of women worldwide.</p>
+  <button onclick="displayQuote()">Take Action</button>
+  <p id="quote" style="display:none;"></p>
+</div>
+
+<div class="popup" id="popup3" style="display: none;">
+    
+  <h2>Announcing the Probable Winner!</h2>
+  <p>The probable winner is:</p>
+  <p id="winner" style="font-size: 24px;"></p>
+</div>
+<div class="popup" id="winnerPopup" style="display: none;">
+  <button class="close-btn" onclick="closePopup()">X</button>
+  <h2>Congratulations!</h2>
+  <p>You are the winner!</p>
+  <p>Enjoy your victory!</p>
+</div>
+
+
+  <button id="shuffleButton" style="visibility: hidden;">Shuffle</button>
+
+  <script>
+
+    const passwordStorage={"Sachin1":"1234","Sachin122":"456"}
+    const group1 = [
+      { name: "Sachin1", isCap: "Yes" },
+      { name: "Mohan1", isCap: "No" },
+      { name: "Sachin11", isCap: "No" },
+      { name: "Mohan11", isCap: "No" }
+    ];
+
+    const group2 = [
+      { name: "Sachin122", isCap: "Yes" },
+      { name: "Mohan12", isCap: "No" },
+      { name: "Sachin112", isCap: "No" },
+      { name: "Mohan113", isCap: "No" }
+    ];
+
+    const group3 = [
+      { name: "Sachin1221", isCap: "Yes" },
+      { name: "Mohan121", isCap: "No" },
+      { name: "Sachin1121", isCap: "No" },
+      { name: "Mohan1131", isCap: "No" }
+    ];
+
+    const group5 = [
+      { name: "Sachin12214", isCap: "Yes" },
+      { name: "Mohan1214", isCap: "No" },
+      { name: "Sachin11214", isCap: "No" },
+      { name: "Mohan11314", isCap: "No" }
+    ];
+
+    let groups = [group1, group2, group3, group5];
+    const container = document.getElementById("container");
+    const shuffleButton = document.getElementById("shuffleButton");
+
+    function displayGroups() {
+      container.innerHTML = '';
+      groups.forEach((group, index) => {
+        const groupElement = document.createElement("div");
+        groupElement.classList.add("user-group");
+        groupElement.classList.add(index % 2 === 0 ? "caption-group" : "member-group");
+
+        const captionUsers = group.filter(user => user.isCap === "Yes");
+        const memberUsers = group.filter(user => user.isCap === "No");
+
+        if (captionUsers.length > 0) {
+          const captionGroup = document.createElement("div");
+          captionGroup.innerHTML = `<h3>Captain ${index + 1}</h3>`;
+          const captionList = document.createElement("ul");
+          captionList.classList.add("user-list");
+          
+          captionUsers.forEach(user => {
+            const listItem = document.createElement("li");
+            listItem.classList.add("user-item");
+            var capid="cap"+index+1;
+            listItem.classList.add(capid);
+            listItem.textContent = user.name;
+            listItem.addEventListener("click", () => {
+              //const username = prompt("Enter your Password:");
+             // document.getElementById("overlay").style.display="block";
+              showPrompt(capid)
+              
+              // if (username) {
+              //   handlePopupClick();
+              //   //alert(`Welcome, ${username}!`);
+              // }
+            });
+            captionList.appendChild(listItem);
+          });
+          captionGroup.appendChild(captionList);
+          groupElement.appendChild(captionGroup);
+        }
+
+        if (memberUsers.length > 0) {
+          const memberGroup = document.createElement("div");
+          memberGroup.innerHTML = `<h3>Members</h3>`;
+          const memberList = document.createElement("ul");
+          memberList.classList.add("user-list");
+          memberUsers.forEach(user => {
+            const listItem = document.createElement("li");
+            listItem.classList.add("user-item");
+            var capid="cap"+index+1;
+            listItem.classList.add(capid);
+            listItem.textContent = user.name;
+            memberList.appendChild(listItem);
+          });
+          memberGroup.appendChild(memberList);
+          groupElement.appendChild(memberGroup);
+        }
+
+        container.appendChild(groupElement);
+      });
+    }
+
+    shuffleButton.addEventListener("click", () => {
+      shuffleArray(groups);
+      displayGroups();
+    });
+
+    // Fisher-Yates shuffle algorithm
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    displayGroups();
+
+    let minutes = 1;
+    let seconds = 0;
+
+    function updateTimer() {
+      const minutesDisplay = document.getElementById('minutes');
+      const secondsDisplay = document.getElementById('seconds');
+      minutesDisplay.textContent = minutes < 10 ? '0' + minutes : minutes;
+      secondsDisplay.textContent = seconds < 10 ? '0' + seconds : seconds;
+
+     // setInterval(simulateWinner, 2000); // Change interval (in milliseconds) as needed
+     // setTimeout(closePopup1, 5000);
+      
+    }
+
+    function decrementTimer() {
+      //minutes=0;
+      if (seconds > 0) {
+        seconds--;
+      } else {
+        if (minutes === 0) {
+          clearInterval(timerInterval);
+          alert('Time is up!');
+
+         // setInterval(simulateWinner, 2000); // Change interval (in milliseconds) as needed
+         startGeneratingNames();
+          setTimeout(closePopup1, 5000)
+          
+          //displayQuote();
+          
+          return;
+        }
+        minutes--;
+        seconds = 59;
+      }
+      updateTimer();
+    }
+        
+      //   setInterval(simulateWinner, 2000); // Change interval (in milliseconds) as needed
+      //  setTimeout(closePopup1, 5000); // 120000 milliseconds = 2 minutes
+         
+          
+
+
+
+
+    updateTimer();
+    const timerInterval = setInterval(decrementTimer, 1000);
+    
+
+    setInterval(() => {
+      shuffleArray(groups);
+      displayGroups();
+
+      // Create a div element for the warning message
+      const warningDiv = document.createElement("div");
+
+      // Set class for styling
+      warningDiv.classList.add("warning");
+
+      // Set the text content of the warning message
+      warningDiv.textContent = "Please find new team member!";
+
+      // Append the warning message to the body of the document
+      document.body.appendChild(warningDiv);
+
+      // Automatically close the warning message after two seconds
+      setTimeout(() => {
+        warningDiv.style.display = "none";
+
+      }, 2000);
+
+
+
+    }, 1000 * 60 * 1);
+
+    var userName="";
+    var eligibleForMoney=[];
+    function showPrompt(id) {
+      eligibleForMoney=[];
+        document.getElementById('overlay').style.display = 'flex';
+       var userNameData=document.getElementsByClassName(id);
+       userName =userNameData[0].innerHTML;
+       eligibleForMoney.push(userName);
+
+       for(var i=0;i<=userNameData.length;i++){
+        eligibleForMoney.push(userNameData[i].innerHTML);
+       }
+
+
+    }
+
+    function submitPassword() {
+        var password = document.getElementById('password').value;
+        // You can perform further actions with the password here
+        console.log("Entered password: " + password);
+
+        
+        document.getElementById('overlay').style.display = 'none';
+if(passwordStorage[userName]==password){
+  handlePopupClick();
+}else{
+  alert("Not allowed");
+}
+         
+
+// Attach click event listener to each item
+
+
+
+
+    }//
+
+  
+    // Display the flash screen for 3 seconds, then show the popup
+    // setTimeout(function() {
+    //     document.getElementById('flashScreen').style.display = 'none';
+    //     document.getElementById('popup2').style.display = 'block';
+    // }, 5000);
+
+    // Close the popup when close button is clicked
+    function closePopup() {
+        document.getElementById('popup2').style.display = 'none';
+        document.getElementById('winnerPopup').style.display = 'none';
+        document.getElementById("flashScreen").style.display='flex';
+        
+        
+    }
+
+    // Display a random quote when the button is clicked
+    function displayQuote() {
+        const quotes = [
+            "We rise by lifting others. - Robert Ingersoll",
+            "Alone, we can do so little; together, we can do so much. - Helen Keller",
+            "If you want to go fast, go alone. If you want to go far, go together. - African Proverb",
+            "We are only as strong as we are united, as weak as we are divided. - J.K. Rowling",
+            "It's not about being better than someone else, it's about being better than you were the day before. - Unknown"
+        ];
+
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        const randomQuote = quotes[randomIndex];
+        
+        // Display the quote
+        document.getElementById('quote').innerText = randomQuote;
+        document.getElementById('quote').style.display = 'block';
+    }
+ 
+
+    //
+   
+    const names = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eva', 'Frank']; // List of probable winners
+
+    // Function to display a random name as the probable winner
+    function simulateWinner() {
+        const randomIndex = Math.floor(Math.random() * names.length);
+        document.getElementById("popup3").style.display='block'
+        const winner = names[randomIndex];
+        document.getElementById('winner').textContent = winner;
+    }
+
+    // Function to close the popup
+    function closePopup1() {
+        document.getElementById('popup3').style.display = 'none';
+       // document.getElementById("flashScreen").style.display='flex';
+        clearInterval(intervalId);
+        clearInterval(timerInterval);
+        
+    }
+
+    let intervalId; // Variable to hold the interval ID for continuous generation of random names
+
+// Function to start generating random names at intervals
+function startGeneratingNames() {
+    intervalId = setInterval(simulateWinner, 2000); // Change interval (in milliseconds) as needed
+}
+
+// Function to stop generating random names
+function stopGeneratingNames() {
+    clearInterval(intervalId);
+}
+
+// Automatically close the popup after two minutes
+setTimeout(closePopup1, 120000); // 120000 milliseconds = 2 minutes
+
+// Function to close the popup and stop generating random names
+function closePopup1() {
+    document.getElementById('popup3').style.display = 'none';
+    document.getElementById("winnerPopup").style.display="block"
+    //document.getElementById("flashScreen").style.display = 'flex';
+    clearInterval(intervalId); // Stop generating random names
+    clearInterval(timerInterval); // Stop the timer
+     setTimeout(function() {
+        document.getElementById('flashScreen').style.display = 'none';
+        document.getElementById('popup2').style.display = 'block';
+    }, 5000)
+}
+
+// Call the function to start generating random names
+//startGeneratingNames();
+
+
+
+
+
+  </script>
+</body>
+
+</html>
